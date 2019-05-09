@@ -16,7 +16,7 @@
 
 #include "velodyne_lidar_driver_wrapper.h"
 
-VelodyneLidarDriverWrapper::VelodyneLidarDriverWrapper(int argc, char **argv, const std::string &name) : DriverWrapper (argc, argv, name) {}
+VelodyneLidarDriverWrapper::VelodyneLidarDriverWrapper(int argc, char **argv, const std::string &name) : DriverWrapper (argc, argv, name), point_cloud_timeout_(0.3) {}
 
 VelodyneLidarDriverWrapper::~VelodyneLidarDriverWrapper() {}
 

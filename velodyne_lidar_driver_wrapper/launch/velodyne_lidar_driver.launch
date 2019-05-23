@@ -18,13 +18,17 @@
 	This file is used to launch a CARMA compatible lidar driver for velodyne VLP-32C
 -->
 <launch>
+
+  <arg name="frame_id" default="velodyne" doc="The frame id to use for the scan data">
+  <arg name="device_ip" default="192.168.1.201" doc="Ip address of velodyne device">
+
   <!-- Launch Wrapper -->
   <include file="$(find velodyne_lidar_wrapper)/launch/velodyne_lidar_wrapper.launch"/>
 
   <!-- Launch Wrapped Nodes -->
   <include file="$(find velodyne_pointcloud)/launch/VLP-32C_points.launch">
-    <arg name="frame_id" value="velodyne" />
-    <arg name="device_ip" value="192.168.1.201" />
+    <arg name="frame_id" value="$(arg frame_id)" />
+    <arg name="device_ip" value="$(arg device_ip)" />
   </include>
 
 </launch>

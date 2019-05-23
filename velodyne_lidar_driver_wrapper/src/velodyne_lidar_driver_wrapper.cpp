@@ -23,8 +23,7 @@ VelodyneLidarDriverWrapper::~VelodyneLidarDriverWrapper() {}
 void VelodyneLidarDriverWrapper::initialize() {
 
     // Set driver type
-    status_.sensor   = true;
-    status_.position = true;
+    status_.lidar   = true;
 
     // Initilize the subscriber for point cloud data
     point_cloud_sub_ = nh_->subscribe("/velodyne_points", 1, &VelodyneLidarDriverWrapper::point_cloud_cb, this);

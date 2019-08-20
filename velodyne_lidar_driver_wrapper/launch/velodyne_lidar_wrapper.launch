@@ -21,6 +21,6 @@
     <node name="velodyne_lidar_driver_wrapper" pkg="velodyne_lidar_driver_wrapper" type="velodyne_lidar_driver_wrapper_node" output="screen"/>
     <rosparam command="load" file="$(find velodyne_lidar_driver_wrapper)/config/parameters.yaml" />
 
-    <node pkg="topic_tools" type="relay" name="relay_points_raw" args="/velodyne_points /lidar/points_raw" />
-    <node pkg="topic_tools" type="relay" name="relay_lidar_scan" args="/scan /lidar/scan" />
+    <node pkg="topic_tools" type="relay" name="relay_points_raw" args="velodyne_points lidar/points_raw" />
+    <node pkg="topic_tools" type="relay" name="relay_lidar_scan" args="scan lidar/scan" />
 </launch>

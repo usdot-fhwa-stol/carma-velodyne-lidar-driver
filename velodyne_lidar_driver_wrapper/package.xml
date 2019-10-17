@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <package format="2">
   <name>velodyne_lidar_driver_wrapper</name>
-  <version>3.1.0</version>
+  <version>1.0.0</version>
   <description>CARMA velodyne lidar driver wrapper package</description>
   <maintainer email="carma@todo.todo">carma</maintainer>
   <license>Apache 2.0</license>

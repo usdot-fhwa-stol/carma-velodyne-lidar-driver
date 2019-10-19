@@ -3,6 +3,8 @@ project(velodyne_lidar_driver_wrapper)
 
 ## Compile as C++11, supported in ROS Kinetic and newer
 add_compile_options(-std=c++11)
+set( CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall")
+set( CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -Wall")
 
 ## Find catkin macros and libraries
 ## if COMPONENTS list like find_package(catkin REQUIRED COMPONENTS xyz)
@@ -82,6 +84,7 @@ install(DIRECTORY include/
 ## Mark other files for installation (e.g. launch and bag files, etc.)
 install(DIRECTORY
         launch
+        config
         DESTINATION ${CATKIN_PACKAGE_SHARE_DESTINATION}
 )
 

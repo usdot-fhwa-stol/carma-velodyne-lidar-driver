@@ -19,7 +19,7 @@ COPY --chown=carma . /home/carma/src/
 RUN ~/src/docker/checkout.sh
 RUN ~/src/docker/install.sh
 
-FROM usdotfhwastol/carma-base:3.3.0
+FROM usdotfhwastol/carma-base:3.4.0
 
 ARG BUILD_DATE="NULL"
 ARG VERSION="NULL"

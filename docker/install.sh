@@ -1,6 +1,6 @@
 #!/bin/bash
 
-#  Copyright (C) 2018-2019 LEIDOS.
+#  Copyright (C) 2018-2020 LEIDOS.
 # 
 #  Licensed under the Apache License, Version 2.0 (the "License"); you may not
 #  use this file except in compliance with the License. You may obtain a copy of
@@ -15,6 +15,7 @@
 #  the License.
 
 sudo chmod -R +x /opt/carma/install
-source /opt/ros/kinetic/setup.bash
+source /opt/autoware.ai/ros/install/setup.bash
+export ROS_LANG_DISABLE=genjava # Disable genjava as it is not needed in this image and makes build inconsistent 
 cd ~/
 catkin_make install

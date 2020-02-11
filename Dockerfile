@@ -12,14 +12,14 @@
 #  License for the specific language governing permissions and limitations under
 #  the License.
 
-FROM usdotfhwastol/autoware.ai:3.4.0 as setup
+FROM usdotfhwastol/autoware.ai:3.6.0 as setup
 
 RUN mkdir ~/src
 COPY --chown=carma . /home/carma/src/
 RUN ~/src/docker/checkout.sh
 RUN ~/src/docker/install.sh
 
-FROM usdotfhwastol/autoware.ai:3.4.0
+FROM usdotfhwastol/autoware.ai:3.6.0
 
 ARG BUILD_DATE="NULL"
 ARG VERSION="NULL"

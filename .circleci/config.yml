@@ -50,7 +50,7 @@ jobs:
           name: Pull Deps
           command: |
             source ${INIT_ENV}
-            ./src/CARMAVelodyneLidarDriver/docker/checkout.sh ${PWD}
+            ./src/CARMAVelodyneLidarDriver/docker/checkout.sh -r ${PWD}
       - run:
           name: Build Driver
           command: |

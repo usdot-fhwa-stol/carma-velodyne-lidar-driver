@@ -16,6 +16,5 @@
 
 sudo chmod -R +x /opt/carma/install
 source /opt/autoware.ai/ros/install/setup.bash
-export ROS_LANG_DISABLE=genjava # Disable genjava as it is not needed in this image and makes build inconsistent 
 cd ~/
 catkin_make install

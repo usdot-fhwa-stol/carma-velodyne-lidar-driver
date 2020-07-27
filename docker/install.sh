@@ -17,4 +17,4 @@
 sudo chmod -R +x /opt/carma/install
 source /opt/autoware.ai/ros/install/setup.bash
 cd ~/
-catkin_make install
+catkin_make install -DCMAKE_BUILD_TYPE=Release

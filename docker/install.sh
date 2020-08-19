@@ -17,4 +17,4 @@
 #sudo chmod -R +x /opt/carma/install
 source /opt/autoware.ai/ros/install/setup.bash
 cd ~/
-colcon build --cmake-target install --cmake-args -DCMAKE_BUILD_TYPE=Release
+colcon build --cmake-args -DCMAKE_BUILD_TYPE=Release

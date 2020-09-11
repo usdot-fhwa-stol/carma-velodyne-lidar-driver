@@ -16,7 +16,7 @@
  * the License.
  */
 
-#include <cav_driver_utils/driver_wrapper/driver_wrapper.h>
+#include <driver_wrapper/driver_wrapper.h>
 #include <sensor_msgs/PointCloud2.h>
 
 class VelodyneLidarDriverWrapper : public cav::DriverWrapper

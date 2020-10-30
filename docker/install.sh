@@ -16,5 +16,4 @@
 
 source /opt/autoware.ai/ros/install/setup.bash
 cd ~/
-export ROS_LANG_DISABLE=genjava
 colcon build --cmake-args -DCMAKE_BUILD_TYPE=Release

@@ -12,14 +12,14 @@
 #  License for the specific language governing permissions and limitations under
 #  the License.
 
-FROM usdotfhwastoldev/autoware.ai:release/vanden-plas as setup
+FROM usdotfhwastolcandidate/autoware.ai:vanden-plas as setup
 
 RUN mkdir ~/src
 COPY --chown=carma . /home/carma/src/
 RUN ~/src/docker/checkout.bash
 RUN ~/src/docker/install.sh
 
-FROM usdotfhwastoldev/autoware.ai:release/vanden-plas
+FROM usdotfhwastolcandidate/autoware.ai:vanden-plas
 
 ARG BUILD_DATE="NULL"
 ARG VERSION="NULL"

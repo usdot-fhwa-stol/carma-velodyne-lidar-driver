@@ -23,13 +23,14 @@
   <arg name="device_ip" default="192.168.1.201" doc="Ip address of velodyne device"/>
   <arg name="max_range" default="200" doc="Maximum lidar range in meters"/>
   <arg name="port" default="2368" doc="Communication port of lidar"/>
+  <arg name="model" default="VLP-32C" doc="Lidar model"/>
 
   <!-- Launch Wrapper -->
   <remap from="velodyne_points" to="lidar/points_raw"/>
   <include file="$(find velodyne_lidar_driver_wrapper)/launch/velodyne_lidar_wrapper.launch"/>
 
   <!-- Launch Wrapped Nodes -->
-  <include file="$(find velodyne_pointcloud)/launch/VLP-32C_points.launch">
+  <include file="$(find velodyne_pointcloud)/launch/$(arg model)_points.launch">
     <arg name="frame_id" value="$(arg frame_id)" />
     <arg name="device_ip" value="$(arg device_ip)" />
     <arg name="max_range" value="$(arg max_range)" />

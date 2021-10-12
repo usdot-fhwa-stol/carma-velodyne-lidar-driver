@@ -12,14 +12,14 @@
 #  License for the specific language governing permissions and limitations under
 #  the License.
 
-FROM usdotfhwastoldev/autoware.ai:noetic-develop as setup
+FROM usdotfhwastolcandidate/autoware.ai:elise as setup
 
 RUN mkdir ~/src
 COPY --chown=carma . /home/carma/src/
 RUN ~/src/docker/checkout.bash
 RUN ~/src/docker/install.sh
 
-FROM usdotfhwastoldev/autoware.ai:noetic-develop
+FROM usdotfhwastolcandidate/autoware.ai:elise
 
 ARG BUILD_DATE="NULL"
 ARG VERSION="NULL"

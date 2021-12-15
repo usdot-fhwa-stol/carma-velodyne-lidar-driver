@@ -1,4 +1,3 @@
-
 # Copyright (C) <SUB><year> LEIDOS.
 #
 # Licensed under the Apache License, Version 2.0 (the "License"); you may not
@@ -35,23 +34,20 @@ include_directories(
 
 # Build
 ament_auto_add_library(${node_lib} SHARED
-        src/velodyne_lidar_driver_wrapper.cpp
+  src/velodyne_lidar_driver_wrapper.cpp
 )
 
 ament_auto_add_executable(${node_exec} 
         src/main.cpp)
 
 # Register component
-rclcpp_components_register_nodes(${node_lib} "VelodyneLidarDriverWrapper::Node")
+rclcpp_components_register_nodes(${node_lib} "velodyne_lidar_driver_wrapper::Node")
 
 target_link_libraries( ${node_exec} 
-        ${node_lib}
+          ${node_lib}
 )
 
 #Install
 ament_auto_package(
   INSTALL_TO_SHARE config launch
 )
-
-
-

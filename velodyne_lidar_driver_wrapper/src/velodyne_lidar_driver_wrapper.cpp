@@ -15,23 +15,23 @@
  */
 
 #include <memory>
-#include "velodyne_lidar_driver_wrapper/velodyne_lidar_driver_wrapper.h"
+#include "velodyne_lidar_driver_wrapper/velodyne_lidar_driver_wrapper.hpp"
 
 namespace velodyne_lidar_driver_wrapper
 {
-    VelodyneLidarDriverWrapper::VelodyneLidarDriverWrapper(const rclcpp::NodeOptions &options)
+    Node::Node(const rclcpp::NodeOptions &options)
         : CarmaLifecycleNode(options)
     {
         
     }
 
-    void VelodyneLidarDriverWrapper::point_cloud_cb(const sensor_msgs::msg::PointCloud2::UniquePtr msg)
+    void Node::point_cloud_cb(const sensor_msgs::msg::PointCloud2::UniquePtr msg)
     {
         last_update_time_ = this->now();
 
     }
 
-    carma_ros2_utils::CallbackReturn VelodyneLidarDriverWrapper::handle_on_configure(const rclcpp_lifecycle::State &prev_state)
+    carma_ros2_utils::CallbackReturn Node::handle_on_configure(const rclcpp_lifecycle::State &prev_state)
     {
         RCLCPP_INFO_STREAM(this->get_logger(), "Velodyne Driver wrapper trying to configure");
 
@@ -42,15 +42,15 @@ namespace velodyne_lidar_driver_wrapper
 
         //Add subscriber(s)
         point_cloud_sub_ = this->create_subscription<sensor_msgs::msg::PointCloud2>("velodyne_points", 1,
-            std::bind(&VelodyneLidarDriverWrapper::point_cloud_cb, this, std::placeholders::_1));
+            std::bind(&Node::point_cloud_cb, this, std::placeholders::_1));
 
         timer_ = this->create_wall_timer(std::chrono::milliseconds(500), 
-        std::bind(&VelodyneLidarDriverWrapper::check_lidar_timeout, this));
+        std::bind(&Node::check_lidar_timeout, this));
 
         return CallbackReturn::SUCCESS;
     }
 
-    void VelodyneLidarDriverWrapper::check_lidar_timeout(){
+    void Node::check_lidar_timeout(){
         rclcpp::Duration duration_since_last_update = this->now() - last_update_time_;
 
         if(duration_since_last_update.seconds() > config_.point_cloud_timeout){
@@ -58,6 +58,3 @@ namespace velodyne_lidar_driver_wrapper
         }
     }
 }
-
-
-

@@ -13,29 +13,28 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
-
 #pragma once
 
 #include "carma_ros2_utils/carma_lifecycle_node.hpp"
 #include <sensor_msgs/msg/point_cloud2.hpp>
-#include "velodyne_lidar_driver_wrapper/velodyne_lidar_driver_wrapper_config.h"
+#include "velodyne_lidar_driver_wrapper/velodyne_lidar_driver_wrapper_config.hpp"
 
 namespace velodyne_lidar_driver_wrapper
 {
-    class VelodyneLidarDriverWrapper  : public carma_ros2_utils::CarmaLifecycleNode
+    class Node : public carma_ros2_utils::CarmaLifecycleNode
     {
         public:
         
-        VelodyneLidarDriverWrapper() = delete;
+        Node() = delete;
 
         /**
          * \brief Constructor. Set explicitly to support node composition.
          * 
          * \param options The node options to use for configuring this node
-         */
-        explicit VelodyneLidarDriverWrapper(const rclcpp::NodeOptions &options);
+        */
+       explicit Node(const rclcpp::NodeOptions &options);
 
-        ~VelodyneLidarDriverWrapper() = default;
+       ~Node() = default;
 
         ////
         // Overrides
@@ -43,8 +42,6 @@ namespace velodyne_lidar_driver_wrapper
         carma_ros2_utils::CallbackReturn handle_on_configure(const rclcpp_lifecycle::State &prev_state);
 
         private:
-        
-        //Add Subscribers
         rclcpp::Subscription<sensor_msgs::msg::PointCloud2>::SharedPtr point_cloud_sub_;
         rclcpp::Time last_update_time_;
         double point_cloud_timeout_;
@@ -52,8 +49,7 @@ namespace velodyne_lidar_driver_wrapper
         void point_cloud_cb(const sensor_msgs::msg::PointCloud2::UniquePtr msg);
         void check_lidar_timeout();
 
-        VelodyneLidarDriverWrapperConfig config_;
+        Config config_;
         rclcpp::TimerBase::SharedPtr timer_;
-
     };
 }

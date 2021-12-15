@@ -13,6 +13,7 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
+
 #pragma once
 
 #include <iostream>
@@ -24,18 +25,17 @@ namespace velodyne_lidar_driver_wrapper
   * \brief Stuct containing the algorithm configuration values for the VelodyneLidarDriverWrapper
   */
 
-    struct VelodyneLidarDriverWrapperConfig
+    struct Config
     {
         uint64_t point_cloud_timeout = 0.2;
 
         // Stream operator for this config
-        friend std::ostream &operator<<(std::ostream &output, const VelodyneLidarDriverWrapperConfig &c)
+        friend std::ostream &operator<<(std::ostream &output, const Config &c)
         {
-            output << "VelodyneLidarDriverWrapperConfig { "<<std::endl
+            output << "VelodyneLidarDriverWrapper::Config { "<<std::endl
                    <<"point_cloud_timeout: "<<c.point_cloud_timeout<<std::endl;
             
             return output;
         }
     };
-}
-//namespace velodyne_lidar_driver_wrapper
+}//namespace velodyne_lidar_driver_wrapper

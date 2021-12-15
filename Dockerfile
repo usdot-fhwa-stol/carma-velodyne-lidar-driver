@@ -39,4 +39,4 @@ COPY --from=setup /home/carma/install /opt/carma/install
 # Copy dependencies installed
 COPY --from=setup /opt/ros/foxy /opt/ros/foxy
 
-CMD [ "wait-for-it.sh", "localhost:11311", "--", "ros2","launch", "velodyne_lidar_driver_wrapper", "velodyne_lidar_wrapper_launch.py"]
+CMD [ "wait-for-it.sh", "localhost:11311", "--", "ros2","launch", "velodyne_lidar_driver_wrapper", "velodyne_lidar_driver_wrapper_launch.py"]

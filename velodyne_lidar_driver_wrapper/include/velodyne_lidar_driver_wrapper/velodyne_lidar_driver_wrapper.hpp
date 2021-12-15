@@ -40,6 +40,7 @@ namespace velodyne_lidar_driver_wrapper
         // Overrides
         ///
         carma_ros2_utils::CallbackReturn handle_on_configure(const rclcpp_lifecycle::State &prev_state);
+        carma_ros2_utils::CallbackReturn handle_on_activate(const rclcpp_lifecycle::State &prev_state);
 
         private:
         rclcpp::Subscription<sensor_msgs::msg::PointCloud2>::SharedPtr point_cloud_sub_;
@@ -51,5 +52,6 @@ namespace velodyne_lidar_driver_wrapper
 
         Config config_;
         rclcpp::TimerBase::SharedPtr timer_;
+        rclcpp::Clock::UniquePtr node_clock_;
     };
 }

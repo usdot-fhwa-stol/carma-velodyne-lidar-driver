@@ -27,10 +27,30 @@ import os
 
 def generate_launch_description():
 
-    # Declare the log_level launch argument
+    # Declare the launch arguments
     log_level = LaunchConfiguration('log_level')
     declare_log_level_arg = DeclareLaunchArgument(
         name ='log_level', default_value = 'WARN', description="Log level to print.", choices=["DEBUG","INFO","WARN","ERROR","FATAL"])
+
+    frame_id = LaunchConfiguration('frame_id')
+    declare_frame_id = DeclareLaunchArgument(name = 'frame_id', default_value = "velodyne", description="The frame id to use for the scan data")
+
+    device_ip = LaunchConfiguration('device_ip')
+    declare_device_ip = DeclareLaunchArgument(name = 'device_ip', default_value='192.168.1.201', description="Ip address of velodyne device")
+
+    max_range = LaunchConfiguration('max_range')
+    declare_max_range = DeclareLaunchArgument(name = 'max_range', default_value='200', description="Maximum lidar range in meters")
+
+    port = LaunchConfiguration('port')
+    declare_port = DeclareLaunchArgument(name = 'port', default_value='2368', description="Communication port of lidar")
+
+    # Define Velodyne Driver Node
+    velodyne_driver_pkg = get_package_share_directory('velodyne_driver')
+    velodyne_driver_node = IncludeLaunchDescription(
+                PythonLaunchDescriptionSource(['/', velodyne_driver_pkg, '/launch', '/velodyne_driver_node-VLP32C-launch.py']),
+                launch_arguments={'frame_id': frame_id, 'device_ip':device_ip, 'max_range':max_range, 'port': port}.items(),
+                
+    )
 
     #  Get parameter file path
     param_file_path = os.path.join(
@@ -60,5 +80,10 @@ def generate_launch_description():
     )
     return LaunchDescription([
         declare_log_level_arg,
+        declare_frame_id,
+        declare_device_ip,
+        declare_max_range,
+        declare_port,
+        velodyne_driver_node,
         velodyne_lidar_wrapper_container
     ])

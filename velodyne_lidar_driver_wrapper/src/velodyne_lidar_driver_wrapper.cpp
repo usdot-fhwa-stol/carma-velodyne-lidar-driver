@@ -58,3 +58,8 @@ namespace velodyne_lidar_driver_wrapper
         }
     }
 }
+
+#include "rclcpp_components/register_node_macro.hpp"
+
+// Register the component with class_loader
+RCLCPP_COMPONENTS_REGISTER_NODE(velodyne_lidar_driver_wrapper::Node)

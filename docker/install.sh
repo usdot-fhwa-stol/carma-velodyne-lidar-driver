@@ -23,6 +23,8 @@ echo "deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/ros-a
 
 # Install the driver
 sudo apt install ros-foxy-velodyne-driver -y
+# Install pointcloud conversion package
+sudo apt-get install ros-foxy-velodyne-pointcloud
 # Build wrapper
 cd ~
 colcon build --packages-up-to velodyne_lidar_driver_wrapper

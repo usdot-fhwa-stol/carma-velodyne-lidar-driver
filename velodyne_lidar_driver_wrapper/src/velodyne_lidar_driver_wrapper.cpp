@@ -27,7 +27,7 @@ namespace velodyne_lidar_driver_wrapper
 
     void Node::point_cloud_cb(const sensor_msgs::msg::PointCloud2::UniquePtr msg)
     {
-        last_update_time_ = node_clock_->now();
+        last_update_time_ = this->now();
 
     }
 
@@ -43,8 +43,6 @@ namespace velodyne_lidar_driver_wrapper
         //Add subscriber(s)
         point_cloud_sub_ = this->create_subscription<sensor_msgs::msg::PointCloud2>("velodyne_points", 1,
             std::bind(&Node::point_cloud_cb, this, std::placeholders::_1));
-
-        node_clock_ = this->get_clock()->make_unique();
         
         return CallbackReturn::SUCCESS;
     }
@@ -55,17 +53,19 @@ namespace velodyne_lidar_driver_wrapper
         timer_ = this->create_wall_timer(std::chrono::milliseconds(500), 
         std::bind(&Node::check_lidar_timeout, this));
 
+        //Initialize timeout check
+        last_update_time_ = this->now();
+        
         return CallbackReturn::SUCCESS;
     }
 
     void Node::check_lidar_timeout(){
-        RCLCPP_INFO_STREAM(this->get_logger(), "Trying to get duration now");
-        rclcpp::Duration duration_since_last_update = node_clock_->now() - last_update_time_;
-        RCLCPP_INFO_STREAM(this->get_logger(), "Got the duration"<<duration_since_last_update.seconds());
+        
+        rclcpp::Duration duration_since_last_update = this->now() - last_update_time_;
 
         if(duration_since_last_update.seconds() > config_.point_cloud_timeout){
             throw std::invalid_argument("Point Cloud wait timed out");
-        }
+        } 
     }
 }
 

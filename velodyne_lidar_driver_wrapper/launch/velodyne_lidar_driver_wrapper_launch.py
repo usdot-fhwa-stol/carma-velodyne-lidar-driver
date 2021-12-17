@@ -51,6 +51,12 @@ def generate_launch_description():
                 launch_arguments={'frame_id': frame_id, 'device_ip':device_ip, 'max_range':max_range, 'port': port}.items(),
                 
     )
+    # Define Velodyne ROS2 raw to pointcloud converter
+    # This nodes subscribes to the velodyne packets published by velodyne_driver_node and publishes the pointcloud
+    velodyne_pointcloud_pkg = get_package_share_directory('velodyne_pointcloud')
+    velodyne_pointcloud_node = IncludeLaunchDescription(
+                PythonLaunchDescriptionSource(['/', velodyne_pointcloud_pkg, '/launch', '/velodyne_transform_node-VLP32C-launch.py'])
+    )
 
     #  Get parameter file path
     param_file_path = os.path.join(
@@ -85,5 +91,6 @@ def generate_launch_description():
         declare_max_range,
         declare_port,
         velodyne_driver_node,
+        velodyne_pointcloud_node,
         velodyne_lidar_wrapper_container
     ])

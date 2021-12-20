@@ -55,7 +55,7 @@ def generate_launch_description():
     # This nodes subscribes to the velodyne packets published by velodyne_driver_node and publishes the pointcloud
     velodyne_pointcloud_pkg = get_package_share_directory('velodyne_pointcloud')
     velodyne_pointcloud_node = IncludeLaunchDescription(
-                PythonLaunchDescriptionSource(['/', velodyne_pointcloud_pkg, '/launch', '/velodyne_transform_node-VLP32C-launch.py'])
+                PythonLaunchDescriptionSource(['/', velodyne_pointcloud_pkg, '/launch', '/velodyne_convert_node-VLP32C-launch.py'])
     )
 
     #  Get parameter file path

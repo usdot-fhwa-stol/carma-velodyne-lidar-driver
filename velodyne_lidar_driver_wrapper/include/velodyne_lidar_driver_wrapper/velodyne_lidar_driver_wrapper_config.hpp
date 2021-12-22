@@ -27,7 +27,7 @@ namespace velodyne_lidar_driver_wrapper
 
     struct Config
     {
-        uint64_t point_cloud_timeout = 0.2;
+        double point_cloud_timeout = 0.2;
 
         // Stream operator for this config
         friend std::ostream &operator<<(std::ostream &output, const Config &c)

@@ -36,7 +36,7 @@ namespace velodyne_lidar_driver_wrapper
         RCLCPP_INFO_STREAM(this->get_logger(), "Velodyne Driver wrapper trying to configure");
 
         //Load Parameters
-        config_.point_cloud_timeout = this->declare_parameter<int64_t>("point_cloud_timeout", config_.point_cloud_timeout);
+        config_.point_cloud_timeout = this->declare_parameter<double>("point_cloud_timeout", config_.point_cloud_timeout);
 
         RCLCPP_INFO_STREAM(this->get_logger(), "Loaded config: " << config_);
 

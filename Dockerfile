@@ -14,12 +14,14 @@
 
 FROM usdotfhwastoldev/autoware.ai:develop as setup
 
+
 RUN mkdir ~/src
 COPY --chown=carma . /home/carma/src/
 RUN ~/src/docker/checkout.bash
 RUN ~/src/docker/install.sh
 
 FROM usdotfhwastoldev/autoware.ai:develop
+
 
 ARG BUILD_DATE="NULL"
 ARG VERSION="NULL"

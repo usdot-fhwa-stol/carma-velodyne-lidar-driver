@@ -30,41 +30,13 @@ def generate_launch_description():
     # Declare the launch arguments
     log_level = LaunchConfiguration('log_level')
     declare_log_level_arg = DeclareLaunchArgument(
-        name ='log_level', default_value = 'WARN', description="Log level to print.", choices=["DEBUG","INFO","WARN","ERROR","FATAL"])
+        name ='log_level', default_value = 'DEBUG', description="Log level to print.", choices=["DEBUG","INFO","WARN","ERROR","FATAL"])
 
-    # Args for driver
-    frame_id = LaunchConfiguration('frame_id')
-    declare_frame_id = DeclareLaunchArgument(name = 'frame_id', default_value = "velodyne", description="The frame id to use for the scan data")
 
-    device_ip = LaunchConfiguration('device_ip')
-    declare_device_ip = DeclareLaunchArgument(name = 'device_ip', default_value='192.168.1.201', description="Ip address of velodyne device")
-
-    max_range = LaunchConfiguration('max_range')
-    declare_max_range = DeclareLaunchArgument(name = 'max_range', default_value='200', description="Maximum lidar range in meters")
-
-    port = LaunchConfiguration('port')
-    declare_port = DeclareLaunchArgument(name = 'port', default_value='2368', description="Communication port of lidar")
-
-    cut_angle = LaunchConfiguration('cut_angle')
-    declare_cut_angle = DeclareLaunchArgument(name = 'cut_angle', default_value = '-0.01')
-
-    # Args for Pointcloud
-    organize_cloud = LaunchConfiguration('pc_organize_cloud')
-    declare_organize_cloud = DeclareLaunchArgument(name ='pc_organize_cloud', default_value = 'False')
-
-    # Define Velodyne Driver Node
-    velodyne_driver_pkg = get_package_share_directory('velodyne_driver')
+    # # Define Velodyne Driver Node and pointcloud converter
+    velodyne_lidar_driver_wrapper_pkg = get_package_share_directory('velodyne_lidar_driver_wrapper')
     velodyne_driver_node = IncludeLaunchDescription(
-                PythonLaunchDescriptionSource(['/', velodyne_driver_pkg, '/launch', '/velodyne_driver_node-VLP32C-launch.py']),
-                launch_arguments={'frame_id': frame_id, 'device_ip':device_ip, 'max_range':max_range, 'port': port, 'cut_angle': cut_angle}.items(),
-                
-    )
-    # Define Velodyne ROS2 raw to pointcloud converter
-    # This nodes subscribes to the velodyne packets published by velodyne_driver_node and publishes the pointcloud
-    velodyne_pointcloud_pkg = get_package_share_directory('velodyne_pointcloud')
-    velodyne_pointcloud_node = IncludeLaunchDescription(
-                PythonLaunchDescriptionSource(['/', velodyne_pointcloud_pkg, '/launch', '/velodyne_convert_node-VLP32C-launch.py']),
-                launch_arguments={'organize_cloud' : organize_cloud}.items(),
+                PythonLaunchDescriptionSource(['/', velodyne_lidar_driver_wrapper_pkg, '/launch', '/velodyne_lidar_driver_launch.py']),
     )
 
     #  Get parameter file path
@@ -96,15 +68,6 @@ def generate_launch_description():
     return LaunchDescription([
         # Specify Args
         declare_log_level_arg,
-        declare_frame_id,
-        declare_device_ip,
-        declare_max_range,
-        declare_port,
-        declare_cut_angle,
-        # Pointcloud args
-        declare_organize_cloud,
-        # Specify Nodes
         velodyne_driver_node,
-        velodyne_pointcloud_node,
         velodyne_lidar_wrapper_container
     ])

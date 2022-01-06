@@ -22,7 +22,9 @@ namespace velodyne_lidar_driver_wrapper
     Node::Node(const rclcpp::NodeOptions &options)
         : CarmaLifecycleNode(options)
     {
-        
+        config_ = Config();
+        //Load Parameters
+        config_.point_cloud_timeout = this->declare_parameter<double>("point_cloud_timeout", config_.point_cloud_timeout);
     }
 
     void Node::point_cloud_cb(const sensor_msgs::msg::PointCloud2::UniquePtr msg)
@@ -35,13 +37,14 @@ namespace velodyne_lidar_driver_wrapper
     {
         RCLCPP_INFO_STREAM(this->get_logger(), "Velodyne Driver wrapper trying to configure");
 
+        config_ = Config();
         //Load Parameters
-        config_.point_cloud_timeout = this->declare_parameter<double>("point_cloud_timeout", config_.point_cloud_timeout);
+        this->get_parameter<double>("point_cloud_timeout", config_.point_cloud_timeout);
 
         RCLCPP_INFO_STREAM(this->get_logger(), "Loaded config: " << config_);
 
         //Add subscriber(s)
-        point_cloud_sub_ = this->create_subscription<sensor_msgs::msg::PointCloud2>("velodyne_points", 1,
+        point_cloud_sub_ = this->create_subscription<sensor_msgs::msg::PointCloud2>("lidar/points_raw", 1,
             std::bind(&Node::point_cloud_cb, this, std::placeholders::_1));
         
         return CallbackReturn::SUCCESS;

@@ -14,11 +14,11 @@
 
 from ament_index_python import get_package_share_directory
 from launch import LaunchDescription
-import launch
 from launch_ros.actions import ComposableNodeContainer
 from launch_ros.descriptions import ComposableNode
 from launch.actions import DeclareLaunchArgument
 from launch.substitutions import LaunchConfiguration
+from carma_ros2_utils.launch.get_current_namespace import GetCurrentNamespace
 
 from launch.actions import IncludeLaunchDescription
 from launch.launch_description_sources import PythonLaunchDescriptionSource
@@ -47,7 +47,7 @@ def generate_launch_description():
     velodyne_lidar_wrapper_container = ComposableNodeContainer(
         package='carma_ros2_utils',
         name='velodyne_lidar_driver_wrapper_container',
-        namespace='/',
+        namespace=GetCurrentNamespace(),
         executable='carma_component_container_mt',
         composable_node_descriptions=[
             
@@ -56,7 +56,7 @@ def generate_launch_description():
                     package='velodyne_lidar_driver_wrapper',
                     plugin='velodyne_lidar_driver_wrapper::Node',
                     name='velodyne_lidar_driver_wrapper_node',
-                    namespace="/",
+                    namespace=GetCurrentNamespace(),
                     extra_arguments=[
                         {'use_intra_process_comms': True},
                         {'--log-level' : log_level }

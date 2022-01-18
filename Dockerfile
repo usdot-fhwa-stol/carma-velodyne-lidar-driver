@@ -12,7 +12,7 @@
 #  License for the specific language governing permissions and limitations under
 #  the License.
 
-FROM usdotfhwastoldev/autoware.ai:develop as setup
+FROM usdotfhwastolcandidate/autoware.ai:fiesta as setup
 
 
 RUN mkdir ~/src
@@ -20,7 +20,7 @@ COPY --chown=carma . /home/carma/src/
 RUN ~/src/docker/checkout.bash
 RUN ~/src/docker/install.sh
 
-FROM usdotfhwastoldev/autoware.ai:develop
+FROM usdotfhwastolcandidate/autoware.ai:fiesta
 
 
 ARG BUILD_DATE="NULL"

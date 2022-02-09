@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2019-2021 LEIDOS.
+ * Copyright (C) 2021 LEIDOS.
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -13,11 +13,23 @@
  * License for the specific language governing permissions and limitations under
  * the License.
  */
+#include <memory>
 
-#include "velodyne_lidar_driver_wrapper.h"
+#include "velodyne_lidar_driver_wrapper/velodyne_lidar_driver_wrapper.hpp"
+#include "rclcpp/rclcpp.hpp"
 
-int main(int argc, char**argv)
+int main(int argc, char ** argv)
 {
-   VelodyneLidarDriverWrapper wrapper(argc,argv);
-   return  wrapper.run();
+    rclcpp::init(argc,argv);
+
+    auto node = std::make_shared<velodyne_lidar_driver_wrapper::Node>(rclcpp::NodeOptions());
+
+    // We use the multi threaded executor here to support the rentrent callbacks of the ros2_lifecycle_manager
+    rclcpp::executors::MultiThreadedExecutor executor;
+    
+    executor.add_node(node->get_node_base_interface());
+    executor.spin();
+
+    rclcpp::shutdown();
+
 }

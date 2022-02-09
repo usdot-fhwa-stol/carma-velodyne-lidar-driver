@@ -38,5 +38,7 @@ LABEL org.label-schema.vcs-ref=${VCS_REF}
 LABEL org.label-schema.build-date=${BUILD_DATE}
 
 COPY --from=setup /home/carma/install /opt/carma/install
+# Copy dependencies installed
+COPY --from=setup /opt/ros/foxy /opt/ros/foxy
 
-CMD [ "wait-for-it.sh", "localhost:11311", "--", "roslaunch", "velodyne_lidar_driver_wrapper", "velodyne_lidar_wrapper.launch"]
+CMD [ "wait-for-it.sh", "localhost:11311", "--", "ros2","launch", "velodyne_lidar_driver_wrapper", "velodyne_lidar_driver_wrapper_launch.py"]

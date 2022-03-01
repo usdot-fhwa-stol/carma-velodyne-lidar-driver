@@ -20,7 +20,6 @@ from launch_ros.descriptions import ComposableNode
 from launch.actions import DeclareLaunchArgument
 from launch.substitutions import LaunchConfiguration, launch_configuration
 from carma_ros2_utils.launch.get_current_namespace import GetCurrentNamespace
-from launch.actions import Shutdown
 from launch.actions import GroupAction
 from launch.actions import IncludeLaunchDescription
 from launch.launch_description_sources import PythonLaunchDescriptionSource
@@ -35,7 +34,6 @@ def generate_launch_description():
     log_level = LaunchConfiguration('log_level')
     declare_log_level_arg = DeclareLaunchArgument(
         name ='log_level', default_value = 'DEBUG', description="Log level to print.", choices=["DEBUG","INFO","WARN","ERROR","FATAL"])
-
 
     # Args for driver
     frame_id = LaunchConfiguration('frame_id')

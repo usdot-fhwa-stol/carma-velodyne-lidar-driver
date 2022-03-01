@@ -14,12 +14,13 @@
 
 from ament_index_python import get_package_share_directory
 from launch import LaunchDescription
+from launch_ros.actions import Node
 from launch_ros.actions import ComposableNodeContainer
 from launch_ros.descriptions import ComposableNode
 from launch.actions import DeclareLaunchArgument
 from launch.substitutions import LaunchConfiguration, launch_configuration
 from carma_ros2_utils.launch.get_current_namespace import GetCurrentNamespace
-
+from launch.actions import Shutdown
 from launch.actions import GroupAction
 from launch.actions import IncludeLaunchDescription
 from launch.launch_description_sources import PythonLaunchDescriptionSource
@@ -67,16 +68,43 @@ def generate_launch_description():
     # Define Velodyne ROS2 driver node along with pointcloud converter
     velodyne_driver_group = GroupAction(
                     actions = [
-                        IncludeLaunchDescription(
-                            PythonLaunchDescriptionSource(['/', velodyne_driver_pkg, '/launch', '/velodyne_driver_node-VLP32C-launch.py']),
-                            launch_arguments={'frame_id': frame_id, 'device_ip':device_ip, 'max_range':max_range, 'port': port, 'model' : model, 'cut_angle' : cut_angle}.items()),
-
+                        #IncludeLaunchDescription(
+                        #    PythonLaunchDescriptionSource(['/', velodyne_driver_pkg, '/launch', '/velodyne_driver_node-VLP32C-launch.py']),
+                        #    launch_arguments={
+                        #        'frame_id': frame_id, 
+                        #        'device_ip':device_ip, 
+                        #        'max_range':max_range, 
+                        #        'port': port, 
+                        #        'model' : model, 
+                        #        'cut_angle' : cut_angle
+                        #    }.items()
+                        #),
                         set_remap.SetRemap('velodyne_points','lidar/points_raw'),
                         IncludeLaunchDescription(
                             PythonLaunchDescriptionSource(['/', velodyne_pointcloud_pkg, '/launch', '/velodyne_convert_node-VLP32C-launch.py']),
-                        launch_arguments={'organize_cloud':organize_cloud}.items()),
+                            launch_arguments={'organize_cloud':organize_cloud}.items()
+                        ),
                     ]
                 )
+
+    velodyne_driver = Node(
+        package='velodyne_driver',
+        #plugin='VelodyneDriver::VelodyneDriver',
+        name='velodyne_driver_node',
+        output='both',
+        #parameters=[ velodyne_driver_params ], # Need to get this param file
+        namespace=GetCurrentNamespace(),
+        remappings = ['velodyne_points', 'lidar/points_raw'],
+        launch_arguments = {
+            'frame_id': frame_id, 
+            'device_ip':device_ip, 
+            'max_range':max_range, 
+            'port': port, 
+            'model' : model, 
+            'cut_angle' : cut_angle                
+        }.items(), # Need to list out all of these
+        on_exit = Shutdown()
+    )
 
      #  Get parameter file path
     param_file_path = os.path.join(
@@ -92,18 +120,19 @@ def generate_launch_description():
             
             # Launch the core node(s)
             ComposableNode(
-                    package='velodyne_lidar_driver_wrapper',
-                    plugin='velodyne_lidar_driver_wrapper::Node',
-                    name='velodyne_lidar_driver_wrapper_node',
-                    namespace=GetCurrentNamespace(),
-                    extra_arguments=[
-                        {'use_intra_process_comms': True},
-                        {'--log-level' : log_level }
-                    ],
-                    parameters=[ param_file_path ]
-            ),
+                package='velodyne_lidar_driver_wrapper',
+                plugin='velodyne_lidar_driver_wrapper::Node',
+                name='velodyne_lidar_driver_wrapper_node',
+                namespace=GetCurrentNamespace(),
+                extra_arguments=[
+                    {'use_intra_process_comms': True},
+                    {'--log-level' : log_level }
+                ],
+                parameters=[ param_file_path ]
+            )
         ]
     )
+
     return LaunchDescription([
         # Specify Args
         declare_log_level_arg,
@@ -117,5 +146,6 @@ def generate_launch_description():
         declare_organize_cloud,
         # Specify Nodes
         velodyne_driver_group,
+        velodyne_driver,
         velodyne_lidar_wrapper_container
     ])

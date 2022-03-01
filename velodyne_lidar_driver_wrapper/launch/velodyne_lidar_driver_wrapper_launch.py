@@ -115,18 +115,18 @@ def generate_launch_description():
                 package='velodyne_driver',
                 plugin='VelodyneDriver::VelodyneDriver',
                 name='velodyne_driver_node',
-                output='both',
+                #output='both',
                 #parameters=[ velodyne_driver_params ], # Need to get this param file
                 remappings = ['velodyne_points', 'lidar/points_raw'],
-                extra_arguments = {
-                    'frame_id': frame_id, 
-                    'device_ip':device_ip, 
-                    'max_range':max_range, 
-                    'port': port, 
-                    'model' : model, 
-                    'cut_angle' : cut_angle                
-                }.items(), # Need to list out all of these
-                on_exit = Shutdown() # Remove?
+                parameters = [
+                    {'frame_id' : frame_id},
+                    {'device_ip' : device_ip},
+                    {'max_range' : max_range},
+                    {'port':  port},
+                    {'model' : model},
+                    {'cut_angle' : cut_angle}
+                ]
+                #on_exit = Shutdown() # Remove?
             )
         ]
     )

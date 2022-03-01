@@ -87,25 +87,6 @@ def generate_launch_description():
                     ]
                 )
 
-    velodyne_driver = Node(
-        package='velodyne_driver',
-        #plugin='VelodyneDriver::VelodyneDriver',
-        name='velodyne_driver_node',
-        output='both',
-        #parameters=[ velodyne_driver_params ], # Need to get this param file
-        namespace=GetCurrentNamespace(),
-        remappings = ['velodyne_points', 'lidar/points_raw'],
-        launch_arguments = {
-            'frame_id': frame_id, 
-            'device_ip':device_ip, 
-            'max_range':max_range, 
-            'port': port, 
-            'model' : model, 
-            'cut_angle' : cut_angle                
-        }.items(), # Need to list out all of these
-        on_exit = Shutdown()
-    )
-
      #  Get parameter file path
     param_file_path = os.path.join(
         get_package_share_directory('velodyne_lidar_driver_wrapper'), 'config/parameters.yaml')
@@ -129,6 +110,23 @@ def generate_launch_description():
                     {'--log-level' : log_level }
                 ],
                 parameters=[ param_file_path ]
+            ),
+            ComposableNode(
+                package='velodyne_driver',
+                plugin='VelodyneDriver::VelodyneDriver',
+                name='velodyne_driver_node',
+                output='both',
+                #parameters=[ velodyne_driver_params ], # Need to get this param file
+                remappings = ['velodyne_points', 'lidar/points_raw'],
+                extra_arguments = {
+                    'frame_id': frame_id, 
+                    'device_ip':device_ip, 
+                    'max_range':max_range, 
+                    'port': port, 
+                    'model' : model, 
+                    'cut_angle' : cut_angle                
+                }.items(), # Need to list out all of these
+                on_exit = Shutdown() # Remove?
             )
         ]
     )

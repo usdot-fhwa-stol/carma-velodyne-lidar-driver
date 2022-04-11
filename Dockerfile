@@ -12,7 +12,7 @@
 #  License for the specific language governing permissions and limitations under
 #  the License.
 
-FROM usdotfhwastol/autoware.ai:carma-system-3.11.0 as setup
+FROM usdotfhwastol/autoware.ai:carma-system-4.0.0 as setup
 
 
 RUN mkdir ~/src
@@ -20,7 +20,7 @@ COPY --chown=carma . /home/carma/src/
 RUN ~/src/docker/checkout.bash
 RUN ~/src/docker/install.sh
 
-FROM usdotfhwastol/autoware.ai:carma-system-3.11.0
+FROM usdotfhwastol/autoware.ai:carma-system-4.0.0
 
 
 ARG BUILD_DATE="NULL"
@@ -38,5 +38,7 @@ LABEL org.label-schema.vcs-ref=${VCS_REF}
 LABEL org.label-schema.build-date=${BUILD_DATE}
 
 COPY --from=setup /home/carma/install /opt/carma/install
+# Copy dependencies installed
+COPY --from=setup /opt/ros/foxy /opt/ros/foxy
 
-CMD [ "wait-for-it.sh", "localhost:11311", "--", "roslaunch", "velodyne_lidar_driver_wrapper", "velodyne_lidar_wrapper.launch"]
+CMD [ "wait-for-it.sh", "localhost:11311", "--", "ros2","launch", "velodyne_lidar_driver_wrapper", "velodyne_lidar_driver_wrapper_launch.py"]

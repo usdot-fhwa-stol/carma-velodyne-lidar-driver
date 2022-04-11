@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2019-2021 LEIDOS.
+ * Copyright (C) 2021 LEIDOS.
  *
  * Licensed under the Apache License, Version 2.0 (the "License"); you may not
  * use this file except in compliance with the License. You may obtain a copy of
@@ -14,43 +14,65 @@
  * the License.
  */
 
-#include "velodyne_lidar_driver_wrapper.h"
+#include <memory>
+#include "velodyne_lidar_driver_wrapper/velodyne_lidar_driver_wrapper.hpp"
 
-VelodyneLidarDriverWrapper::VelodyneLidarDriverWrapper(int argc, char **argv, const std::string &name) : DriverWrapper (argc, argv, name), point_cloud_timeout_(0.3) {}
-
-VelodyneLidarDriverWrapper::~VelodyneLidarDriverWrapper() {}
-
-void VelodyneLidarDriverWrapper::initialize() {
-
-    // Set driver type
-    status_.lidar   = true;
-
-    // Initilize the subscriber for point cloud data
-    point_cloud_sub_ = nh_->subscribe("velodyne_points", 1, &VelodyneLidarDriverWrapper::point_cloud_cb, this);
-
-    private_nh_->param<double>("point_cloud_timeout", point_cloud_timeout_, 0.3);
-
-}
-
-void VelodyneLidarDriverWrapper::pre_spin()
+namespace velodyne_lidar_driver_wrapper
 {
-    checkLidarTimeout();
-}
-
-void VelodyneLidarDriverWrapper::post_spin() {}
-
-void VelodyneLidarDriverWrapper::shutdown() {}
-
-void VelodyneLidarDriverWrapper::point_cloud_cb(const sensor_msgs::PointCloud2ConstPtr &msg) {
-    last_update_time_ = ros::Time::now();
-    status_.status = cav_msgs::DriverStatus::OPERATIONAL;
-}
-
-void VelodyneLidarDriverWrapper::checkLidarTimeout()
-{
-    if(last_update_time_.isZero() ||
-       ros::Time::now() - last_update_time_ > ros::Duration(point_cloud_timeout_))
+    Node::Node(const rclcpp::NodeOptions &options)
+        : CarmaLifecycleNode(options)
     {
-        status_.status = cav_msgs::DriverStatus::OFF;
+        config_ = Config();
+        //Load Parameters
+        config_.point_cloud_timeout = this->declare_parameter<double>("point_cloud_timeout", config_.point_cloud_timeout);
+    }
+
+    void Node::point_cloud_cb(const sensor_msgs::msg::PointCloud2::UniquePtr msg)
+    {
+        last_update_time_ = this->now();
+
+    }
+
+    carma_ros2_utils::CallbackReturn Node::handle_on_configure(const rclcpp_lifecycle::State &prev_state)
+    {
+        RCLCPP_INFO_STREAM(this->get_logger(), "Velodyne Driver wrapper trying to configure");
+
+        config_ = Config();
+        //Load Parameters
+        this->get_parameter<double>("point_cloud_timeout", config_.point_cloud_timeout);
+
+        RCLCPP_INFO_STREAM(this->get_logger(), "Loaded config: " << config_);
+
+        //Add subscriber(s)
+        point_cloud_sub_ = this->create_subscription<sensor_msgs::msg::PointCloud2>("lidar/points_raw", 1,
+            std::bind(&Node::point_cloud_cb, this, std::placeholders::_1));
+        
+        return CallbackReturn::SUCCESS;
+    }
+
+    carma_ros2_utils::CallbackReturn Node::handle_on_activate(const rclcpp_lifecycle::State &prev_state)
+    {
+        //Timer setup
+        timer_ = this->create_wall_timer(std::chrono::milliseconds(500), 
+        std::bind(&Node::check_lidar_timeout, this));
+
+        //Initialize timeout check
+        last_update_time_ = this->now();
+        
+        return CallbackReturn::SUCCESS;
+    }
+
+    void Node::check_lidar_timeout(){
+        
+        rclcpp::Duration duration_since_last_update = this->now() - last_update_time_;
+
+        if(duration_since_last_update.seconds() > config_.point_cloud_timeout){
+            throw std::invalid_argument("Point Cloud wait timed out");
+        } 
     }
 }
+
+#include "rclcpp_components/register_node_macro.hpp"
+
+// Register the component with class_loader
+RCLCPP_COMPONENTS_REGISTER_NODE(velodyne_lidar_driver_wrapper::Node)

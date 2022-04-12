@@ -27,4 +27,4 @@ sudo apt install ros-foxy-velodyne-driver -y
 sudo apt-get install ros-foxy-velodyne-pointcloud
 # Build wrapper
 cd ~
-colcon build --packages-up-to velodyne_lidar_driver_wrapper
+colcon build --cmake-args -DCMAKE_BUILD_TYPE=Release --packages-up-to velodyne_lidar_driver_wrapper driver_shutdown_ros2

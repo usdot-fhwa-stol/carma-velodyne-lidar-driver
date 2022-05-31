@@ -12,7 +12,7 @@
 #  License for the specific language governing permissions and limitations under
 #  the License.
 
-FROM usdotfhwastol/autoware.ai:carma-system-4.0.0 as setup
+FROM usdotfhwastol/autoware.ai:carma-system-4.1.0 as setup
 
 
 RUN mkdir ~/src
@@ -20,7 +20,7 @@ COPY --chown=carma . /home/carma/src/
 RUN ~/src/docker/checkout.bash
 RUN ~/src/docker/install.sh
 
-FROM usdotfhwastol/autoware.ai:carma-system-4.0.0
+FROM usdotfhwastol/autoware.ai:carma-system-4.1.0
 
 
 ARG BUILD_DATE="NULL"

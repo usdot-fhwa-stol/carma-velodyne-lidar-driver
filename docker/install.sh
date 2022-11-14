@@ -30,6 +30,12 @@ echo "deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/ros-a
 
 # Install the driver and pointcloud conversion package
 sudo apt install ros-foxy-velodyne-driver -y ros-foxy-velodyne-pointcloud
+
+# Don't proceed in Continuous Integration environment
+if [[ "$CI" == "true" ]]; then
+    exit
+fi
+
 # Build wrapper
 cd ~
 if [[ ! -z "$ROS2_PACKAGES" ]]; then

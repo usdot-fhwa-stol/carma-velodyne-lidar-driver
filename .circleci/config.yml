@@ -28,11 +28,12 @@ jobs:
     # Pull docker image from docker hub
     # XTERM used for better catkin_make output
     docker:
-      - image: usdotfhwastol/autoware.ai:carma-system-4.2.0
+      - image: usdotfhwastol/autoware.ai:carma-system-4.3.0
         user: carma
         environment:
           TERM: xterm # use xterm to get full display output from build
           INIT_ENV: /home/carma/.base-image/init-env.sh
+          ROS_2_ENV: /opt/ros/foxy/setup.bash
     working_directory: "/opt/carma/"
     # Execution steps
     steps:
@@ -51,16 +52,20 @@ jobs:
           command: |
             source ${INIT_ENV}
             ./src/CARMAVelodyneLidarDriver/docker/checkout.bash -r ${PWD}
+            sed -i '/colcon build/ s/$/ --packages-up-to velodyne_lidar_driver_wrapper driver_shutdown_ros2/' ~/.ci-image/engineering_tools/code_coverage/make_with_coverage.bash
       - run:
           name: Build Driver
           command: |
             source ${INIT_ENV}
-            build-wrapper-linux-x86-64 --out-dir /opt/carma/bw-output bash make_with_coverage.bash -m -e /opt/carma/ -o ./coverage_reports/gcov
+            source ${ROS_2_ENV}
+            ./src/CARMAVelodyneLidarDriver/docker/install.sh
+            make_with_coverage.bash -m -e /opt/carma/ -o ./coverage_reports/gcov
       - run:
           name: Run C++ Tests
           command: |
             source ${INIT_ENV}
-            bash make_with_coverage.bash -t -e /opt/carma/ -o ./coverage_reports/gcov
+            source ${ROS_2_ENV}
+            make_with_coverage.bash -t -e /opt/carma/ -o ./coverage_reports/gcov
       # Run SonarCloud analysis
       # PR Branchs and number extracted from Circle variables and github api
       # Circle CI seems to make a change to the base branch, so we must fetch --force to ensure correct git file change stats

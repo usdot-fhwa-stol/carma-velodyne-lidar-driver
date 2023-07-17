@@ -29,7 +29,7 @@ sudo curl -sSL https://raw.githubusercontent.com/ros/rosdistro/master/ros.key  -
 echo "deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/ros-archive-keyring.gpg] http://packages.ros.org/ros2/ubuntu $(lsb_release -cs) main" | sudo tee /etc/apt/sources.list.d/ros2.list > /dev/null
 
 # Install the driver and pointcloud conversion package
-sudo apt install ros-foxy-velodyne-driver -y ros-foxy-velodyne-pointcloud
+sudo apt install ros-foxy-velodyne-driver -y
 
 # Don't proceed in Continuous Integration environment
 if [[ "$CI" == "true" ]]; then

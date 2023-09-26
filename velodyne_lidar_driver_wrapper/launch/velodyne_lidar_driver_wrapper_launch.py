@@ -54,6 +54,9 @@ def generate_launch_description():
     cut_angle = LaunchConfiguration('cut_angle')
     declare_cut_angle = DeclareLaunchArgument(name = 'cut_angle', default_value = '-0.01')
 
+    gps_time = LaunchConfiguration('gps_time')
+    declare_gps_time = DeclareLaunchArgument(name = 'gps_time', default_value = 'False')
+
     # Args for Pointcloud
     velodyne_pointcloud_pkg = get_package_share_directory('velodyne_pointcloud')
 
@@ -92,7 +95,8 @@ def generate_launch_description():
                     {'max_range' : max_range},
                     {'port':  port},
                     {'model' : model},
-                    {'cut_angle' : cut_angle}
+                    {'cut_angle' : cut_angle},
+                    {'gps_time' : gps_time}
                 ]
             )
         ]
@@ -130,6 +134,7 @@ def generate_launch_description():
         declare_port,
         declare_model,
         declare_cut_angle,
+        declare_gps_time,
         # Pointcloud args
         declare_organize_cloud,
         # Specify Nodes

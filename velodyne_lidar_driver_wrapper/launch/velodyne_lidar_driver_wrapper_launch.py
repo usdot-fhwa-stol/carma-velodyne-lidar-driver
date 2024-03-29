@@ -26,6 +26,7 @@ from launch.launch_description_sources import PythonLaunchDescriptionSource
 from launch_ros.actions import set_remap
 from launch_ros.actions import set_parameter
 
+import yaml
 import os
 
 def generate_launch_description():
@@ -58,19 +59,18 @@ def generate_launch_description():
     declare_gps_time = DeclareLaunchArgument(name = 'gps_time', default_value = 'False')
 
     # Args for Pointcloud
-    velodyne_pointcloud_pkg = get_package_share_directory('velodyne_pointcloud')
-
-    organize_cloud = LaunchConfiguration('organize_cloud')
-    declare_organize_cloud = DeclareLaunchArgument(name ='organize_cloud', default_value = 'False')
-
+    pointcloud_params_file = os.path.join(
+        get_package_share_directory('velodyne_lidar_driver_wrapper'), 'config/VLP32C-velodyne_convert_node-params.yaml')
+    with open(pointcloud_params_file, 'r') as f:
+        pointcloud_params = yaml.safe_load(f)['velodyne_convert_node']['ros__parameters']
     # Define Velodyne ROS2 driver node along with pointcloud converter
     velodyne_pointcloud_group = GroupAction(
         actions = [
             set_remap.SetRemap('velodyne_points','lidar/points_raw'),
-            IncludeLaunchDescription(
-                PythonLaunchDescriptionSource(['/', velodyne_pointcloud_pkg, '/launch', '/velodyne_convert_node-VLP32C-launch.py']),
-                launch_arguments={'organize_cloud':organize_cloud}.items()
-            ),
+            Node(package='velodyne_pointcloud',
+                executable='velodyne_convert_node',
+                output='both',
+                parameters=[pointcloud_params])
         ]
     )
 
@@ -78,7 +78,7 @@ def generate_launch_description():
     param_file_path = os.path.join(
         get_package_share_directory('velodyne_lidar_driver_wrapper'), 'config/parameters.yaml')
 
-    
+
     velodyne_driver_container = ComposableNodeContainer(
         name='velodyne_driver_container',
         namespace=GetCurrentNamespace(),
@@ -109,7 +109,7 @@ def generate_launch_description():
         namespace=GetCurrentNamespace(),
         executable='carma_component_container_mt',
         composable_node_descriptions=[
-            
+
             # Launch the core node(s)
             ComposableNode(
                 package='velodyne_lidar_driver_wrapper',

@@ -63,6 +63,7 @@ def generate_launch_description():
         get_package_share_directory('velodyne_lidar_driver_wrapper'), 'config/VLP32C-velodyne_convert_node-params.yaml')
     with open(pointcloud_params_file, 'r') as f:
         pointcloud_params = yaml.safe_load(f)['velodyne_convert_node']['ros__parameters']
+    pointcloud_params['calibration'] = os.path.join(get_package_share_directory('velodyne_pointcloud'), 'params', 'VeloView-VLP-32C.yaml')
     # Define Velodyne ROS2 driver node along with pointcloud converter
     velodyne_pointcloud_group = GroupAction(
         actions = [
@@ -135,8 +136,6 @@ def generate_launch_description():
         declare_model,
         declare_cut_angle,
         declare_gps_time,
-        # Pointcloud args
-        declare_organize_cloud,
         # Specify Nodes
         velodyne_pointcloud_group,
         velodyne_driver_container,

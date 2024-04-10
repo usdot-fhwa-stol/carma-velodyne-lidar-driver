@@ -36,7 +36,7 @@ def generate_launch_description():
     declare_log_level_arg = DeclareLaunchArgument(
         name ='log_level', default_value = 'DEBUG', description="Log level to print.", choices=["DEBUG","INFO","WARN","ERROR","FATAL"])
 
-    # Args for driver
+    # Args for velodyne_driver_node
     frame_id = LaunchConfiguration('frame_id')
     declare_frame_id = DeclareLaunchArgument(name = 'frame_id', default_value = "velodyne", description="The frame id to use for the scan data")
 
@@ -58,12 +58,13 @@ def generate_launch_description():
     gps_time = LaunchConfiguration('gps_time')
     declare_gps_time = DeclareLaunchArgument(name = 'gps_time', default_value = 'False')
 
-    # Args for Pointcloud
+    # Args for velodyne_convert_node
     pointcloud_params_file = os.path.join(
         get_package_share_directory('velodyne_lidar_driver_wrapper'), 'config/VLP32C-velodyne_convert_node-params.yaml')
     with open(pointcloud_params_file, 'r') as f:
         pointcloud_params = yaml.safe_load(f)['velodyne_convert_node']['ros__parameters']
     pointcloud_params['calibration'] = os.path.join(get_package_share_directory('velodyne_pointcloud'), 'params', 'VeloView-VLP-32C.yaml')
+
     # Define Velodyne ROS2 driver node along with pointcloud converter
     velodyne_pointcloud_group = GroupAction(
         actions = [

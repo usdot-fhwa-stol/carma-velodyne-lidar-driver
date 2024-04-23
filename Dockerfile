@@ -25,7 +25,7 @@ COPY --chown=carma . /home/carma/src/
 RUN ~/src/docker/checkout.bash
 RUN ~/src/docker/install.sh
 
-FROM usdotfhwastol/autoware.ai:carma-system-4.5.0
+FROM base_image
 
 
 ARG BUILD_DATE="NULL"

@@ -11,9 +11,10 @@
 #  WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
 #  License for the specific language governing permissions and limitations under
 #  the License.
-
-FROM usdotfhwastol/autoware.ai:carma-system-4.5.0 as setup
-
+ARG DOCKER_ORG="usdotfhwastoldev"
+ARG DOCKER_TAG="develop"
+FROM ${DOCKER_ORG}/autoware.ai:${DOCKER_TAG} as base_image
+ARG GIT_BRANCH="develop" 
 ARG ROS1_PACKAGES=""
 ENV ROS1_PACKAGES=${ROS1_PACKAGES}
 ARG ROS2_PACKAGES=""

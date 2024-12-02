@@ -15,13 +15,13 @@ ARG DOCKER_ORG="usdotfhwastoldev"
 ARG DOCKER_TAG="develop"
 FROM ${DOCKER_ORG}/autoware.ai:${DOCKER_TAG} as base_image
 FROM base_image as setup
-ARG GIT_BRANCH="develop" 
+ARG GIT_BRANCH="develop"
 ARG PACKAGES=""
 ENV PACKAGES=${PACKAGES}
 
 RUN mkdir ~/src
 COPY --chown=carma . /home/carma/src/
-RUN ~/src/docker/checkout.bash
+RUN ~/src/docker/checkout.bash -b ${GIT_BRANCH}
 RUN ~/src/docker/install.sh
 
 FROM base_image 

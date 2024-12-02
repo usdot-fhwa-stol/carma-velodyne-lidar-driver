@@ -23,6 +23,8 @@ carma_package()
 find_package(ament_cmake_auto REQUIRED)
 ament_auto_find_build_dependencies()
 
+# Manually find the eigen3_cmake_module and Eigen3
+find_package(eigen3_cmake_module REQUIRED)
 find_package(Eigen3 REQUIRED)
 
 # Name build targets

@@ -21,6 +21,7 @@ carma_package()
 
 ## Find dependencies using ament auto
 find_package(ament_cmake_auto REQUIRED)
+find_package(Eigen3 REQUIRED)
 ament_auto_find_build_dependencies()
 
 # Use C++17
@@ -56,4 +57,6 @@ target_link_libraries( ${node_exec}
 #Install
 ament_auto_package(
   INSTALL_TO_SHARE config launch
+  DEPENDENCIES
+    Eigen3
 )

@@ -13,6 +13,7 @@
   <depend>carma_ros2_utils</depend>
   <depend>sensor_msgs</depend>
   <depend>rclcpp</depend>
+  <depend>eigen</depend>
   <depend>velodyne_driver</depend>
   <depend>velodyne_pointcloud</depend>
   

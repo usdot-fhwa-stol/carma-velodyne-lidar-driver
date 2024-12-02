@@ -21,8 +21,9 @@ carma_package()
 
 ## Find dependencies using ament auto
 find_package(ament_cmake_auto REQUIRED)
-find_package(Eigen3 REQUIRED)
 ament_auto_find_build_dependencies()
+
+find_package(Eigen3 REQUIRED)
 
 # Name build targets
 set(node_exec velodyne_lidar_driver_wrapper_node_exec)

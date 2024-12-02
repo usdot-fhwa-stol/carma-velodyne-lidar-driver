@@ -28,7 +28,7 @@ else
     echo "deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/ros-archive-keyring.gpg] http://packages.ros.org/ros2/ubuntu $(lsb_release -cs) main" | sudo tee /etc/apt/sources.list.d/ros2.list > /dev/null
 
     # Install the driver and pointcloud conversion package
-    sudo apt install ros-humble-velodyne-driver -y
+    sudo apt install ros-humble-velodyne-driver ros-humble-velodyne-pointcloud libeigen3-dev -y
 fi
 
 # Don't proceed in Continuous Integration environment

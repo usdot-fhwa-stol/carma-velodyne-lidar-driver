@@ -14,13 +14,12 @@
 #  License for the specific language governing permissions and limitations under
 #  the License.
 
-# Source ros2
-if [[ ! -z "$ROS2_PACKAGES" ]]; then
+if [[ ! -z "$PACKAGES" ]]; then
     echo "Sourcing previous build for incremental build start point..."
     source /opt/carma/install/setup.bash
 else
     echo "Sourcing base image for full build..."
-    source /opt/ros/foxy/setup.bash
+    source /opt/ros/humble/setup.bash
 fi
 
 # Get driver
@@ -29,7 +28,7 @@ sudo curl -sSL https://raw.githubusercontent.com/ros/rosdistro/master/ros.key  -
 echo "deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/ros-archive-keyring.gpg] http://packages.ros.org/ros2/ubuntu $(lsb_release -cs) main" | sudo tee /etc/apt/sources.list.d/ros2.list > /dev/null
 
 # Install the driver and pointcloud conversion package
-sudo apt install ros-foxy-velodyne-driver -y
+sudo apt install ros-humble-velodyne-driver -y
 
 # Don't proceed in Continuous Integration environment
 if [[ "$CI" == "true" ]]; then
@@ -38,8 +37,8 @@ fi
 
 # Build wrapper
 cd ~
-if [[ ! -z "$ROS2_PACKAGES" ]]; then
-    colcon build --cmake-args -DCMAKE_BUILD_TYPE=Release --packages-above $ROS2_PACKAGES
+if [[ ! -z "$PACKAGES" ]]; then
+    colcon build --cmake-args -DCMAKE_BUILD_TYPE=Release --packages-above $PACKAGES
 else
     colcon build --cmake-args -DCMAKE_BUILD_TYPE=Release --packages-up-to velodyne_lidar_driver_wrapper driver_shutdown_ros2
 fi

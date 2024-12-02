@@ -16,10 +16,8 @@ ARG DOCKER_TAG="develop"
 FROM ${DOCKER_ORG}/autoware.ai:${DOCKER_TAG} as base_image
 FROM base_image as setup
 ARG GIT_BRANCH="develop" 
-ARG ROS1_PACKAGES=""
-ENV ROS1_PACKAGES=${ROS1_PACKAGES}
-ARG ROS2_PACKAGES=""
-ENV ROS2_PACKAGES=${ROS2_PACKAGES}
+ARG PACKAGES=""
+ENV PACKAGES=${PACKAGES}
 
 RUN mkdir ~/src
 COPY --chown=carma . /home/carma/src/
@@ -27,7 +25,6 @@ RUN ~/src/docker/checkout.bash
 RUN ~/src/docker/install.sh
 
 FROM base_image 
-
 
 ARG BUILD_DATE="NULL"
 ARG VERSION="NULL"
@@ -45,6 +42,6 @@ LABEL org.label-schema.build-date=${BUILD_DATE}
 
 COPY --from=setup /home/carma/install /opt/carma/install
 # Copy dependencies installed
-COPY --from=setup /opt/ros/foxy /opt/ros/foxy
+COPY --from=setup /opt/ros/humble /opt/ros/humble
 
-CMD [ "wait-for-it.sh", "localhost:11311", "--", "ros2","launch", "velodyne_lidar_driver_wrapper", "velodyne_lidar_driver_wrapper_launch.py"]
+CMD [ "wait-for-it", "localhost:11311", "--", "ros2","launch", "velodyne_lidar_driver_wrapper", "velodyne_lidar_driver_wrapper_launch.py"]

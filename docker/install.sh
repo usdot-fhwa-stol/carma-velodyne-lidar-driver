@@ -15,6 +15,7 @@
 #  the License.
 
 if [[ ! -z "$PACKAGES" ]]; then
+    # No need to install and build dependencies as they are already present in /opt/carma/install/setup.bash
     echo "Sourcing previous build for incremental build start point..."
     source /opt/carma/install/setup.bash
 else
@@ -27,7 +28,7 @@ else
     sudo curl -sSL https://raw.githubusercontent.com/ros/rosdistro/master/ros.key  -o /usr/share/keyrings/ros-archive-keyring.gpg
     echo "deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/ros-archive-keyring.gpg] http://packages.ros.org/ros2/ubuntu $(lsb_release -cs) main" | sudo tee /etc/apt/sources.list.d/ros2.list > /dev/null
 
-    # Temporary workaround until Eigen3 and PCL are properly exported by velodyne_pointcloud
+    # Before installing driver and the wrapper, temporary workaround until Eigen3 and PCL are properly exported by velodyne_pointcloud
     # open issue: https://github.com/ros-drivers/velodyne/issues/550, workaround by: @hect95
     sudo sed -i 's/\beigen\b/Eigen3/g' /opt/ros/humble/share/velodyne_pointcloud/cmake/ament_cmake_export_dependencies-extras.cmake
     sudo sed -i 's/\bpcl\b/PCL/g' /opt/ros/humble/share/velodyne_pointcloud/cmake/ament_cmake_export_dependencies-extras.cmake

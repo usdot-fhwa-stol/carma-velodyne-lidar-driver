@@ -12,7 +12,7 @@
 # License for the specific language governing permissions and limitations under
 # the License.
 
-cmake_minimum_required(VERSION 3.5)
+cmake_minimum_required(VERSION 3.8)
 project(velodyne_lidar_driver_wrapper)
 
 find_package(carma_cmake_common REQUIRED)
@@ -22,6 +22,12 @@ carma_package()
 ## Find dependencies using ament auto
 find_package(ament_cmake_auto REQUIRED)
 ament_auto_find_build_dependencies()
+
+# Use C++17
+if(NOT CMAKE_CXX_STANDARD)
+  set(CMAKE_CXX_STANDARD 17)
+  set(CMAKE_CXX_STANDARD_REQUIRED ON)
+endif()
 
 # Name build targets
 set(node_exec velodyne_lidar_driver_wrapper_node_exec)

@@ -35,9 +35,13 @@ set(node_exec velodyne_lidar_driver_wrapper_node_exec)
 set(node_lib velodyne_lidar_driver_wrapper_node)
 
 # Includes
+
 include_directories(
   include
-  ${EIGEN3_INCLUDE_DIRS}
+)
+
+include_directories(SYSTEM
+  ${EIGEN3_INCLUDE_DIR}
 )
 
 # Build

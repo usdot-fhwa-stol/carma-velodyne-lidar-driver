@@ -29,6 +29,12 @@ else
 
     # Install the driver and pointcloud conversion package
     sudo apt install ros-humble-velodyne-driver ros-humble-velodyne-pointcloud libeigen3-dev -y
+
+    # Temporary workaround until Eigen3 and PCL are properly exported by velodyne_pointcloud
+    # open issue: https://github.com/ros-drivers/velodyne/issues/550, workaround by: @hect95
+    sed -i 's/\beigen\b/Eigen3/g' /opt/ros/humble/share/velodyne_pointcloud/cmake/ament_cmake_export_dependencies-extras.cmake 
+    sed -i 's/\bpcl\b/PCL/g' /opt/ros/humble/share/velodyne_pointcloud/cmake/ament_cmake_export_dependencies-extras.cmake
+
     source /opt/ros/humble/setup.bash
     source /opt/autoware.ai/ros/install/setup.bash
 fi
@@ -37,11 +43,6 @@ fi
 if [[ "$CI" == "true" ]]; then
     exit
 fi
-
-# Temporary workaround until Eigen3 and PCL are properly exported by velodyne_pointcloud
-# open issue: https://github.com/ros-drivers/velodyne/issues/550, workaround by: @hect95
-sed -i 's/\beigen\b/Eigen3/g' /opt/ros/humble/share/velodyne_pointcloud/cmake/ament_cmake_export_dependencies-extras.cmake 
-sed -i 's/\bpcl\b/PCL/g' /opt/ros/humble/share/velodyne_pointcloud/cmake/ament_cmake_export_dependencies-extras.cmake
 
 # Build wrapper
 cd ~

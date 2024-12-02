@@ -42,7 +42,6 @@ LABEL org.label-schema.build-date=${BUILD_DATE}
 
 COPY --from=setup /home/carma/install /opt/carma/install
 # Copy dependencies installed
-COPY --from=setup /opt/autoware.ai/ros/install /opt/autoware.ai/ros/install
 COPY --from=setup /opt/ros/humble /opt/ros/humble
 
 CMD [ "wait-for-it", "localhost:11311", "--", "ros2","launch", "velodyne_lidar_driver_wrapper", "velodyne_lidar_driver_wrapper_launch.py"]

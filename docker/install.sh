@@ -33,7 +33,7 @@ else
     sudo sed -i 's/\bpcl\b/PCL/g' /opt/ros/humble/share/velodyne_pointcloud/cmake/ament_cmake_export_dependencies-extras.cmake
     
     # Install the driver and pointcloud conversion package
-    sudo apt install ros-humble-velodyne-driver ros-humble-velodyne-pointcloud libeigen3-dev -y
+    sudo apt install ros-humble-velodyne-driver -y
 
     source /opt/ros/humble/setup.bash
     source /opt/autoware.ai/ros/install/setup.bash

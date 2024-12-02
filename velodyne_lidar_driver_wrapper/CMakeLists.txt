@@ -62,6 +62,4 @@ target_link_libraries( ${node_exec}
 #Install
 ament_auto_package(
   INSTALL_TO_SHARE config launch
-  DEPENDENCIES
-    Eigen3
 )

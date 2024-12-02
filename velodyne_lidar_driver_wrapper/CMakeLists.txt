@@ -24,12 +24,6 @@ find_package(ament_cmake_auto REQUIRED)
 find_package(Eigen3 REQUIRED)
 ament_auto_find_build_dependencies()
 
-# Use C++17
-if(NOT CMAKE_CXX_STANDARD)
-  set(CMAKE_CXX_STANDARD 17)
-  set(CMAKE_CXX_STANDARD_REQUIRED ON)
-endif()
-
 # Name build targets
 set(node_exec velodyne_lidar_driver_wrapper_node_exec)
 set(node_lib velodyne_lidar_driver_wrapper_node)

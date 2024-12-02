@@ -41,7 +41,6 @@ cd ~
 if [[ ! -z "$PACKAGES" ]]; then
     colcon build --cmake-args -DCMAKE_BUILD_TYPE=Release --packages-above $PACKAGES
 else
-    sudo apt-get update
     source /opt/ros/humble/setup.bash
     source /opt/autoware.ai/ros/install/setup.bash
     colcon build --cmake-args -DCMAKE_BUILD_TYPE=Release --packages-up-to velodyne_lidar_driver_wrapper driver_shutdown_ros2

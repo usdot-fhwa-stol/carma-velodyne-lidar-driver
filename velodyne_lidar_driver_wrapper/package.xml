@@ -1,12 +1,11 @@
 <?xml version="1.0"?>
 <package format="3">
   <name>velodyne_lidar_driver_wrapper</name>
-  <version>1.0.0</version>
+  <version>5.0.0</version>
   <description>CARMA velodyne lidar driver wrapper package</description>
   <maintainer email="carma@dot.gov">carma</maintainer>
   <license>Apache 2.0</license>
 
-  <buildtool_depend>ament_cmake_auto</buildtool_depend>
   <build_depend>carma_cmake_common</build_depend>
   <build_depend>rcpputils</build_depend>
   <build_depend>ament_cmake_auto</build_depend>

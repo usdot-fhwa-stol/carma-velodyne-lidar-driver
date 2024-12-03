@@ -19,10 +19,6 @@ if [[ ! -z "$PACKAGES" ]]; then
     echo "Sourcing previous build for incremental build start point..."
     source /opt/carma/install/setup.bash
 else
-    echo "Sourcing base image for full build..."
-    source /opt/ros/humble/setup.bash
-    source /opt/autoware.ai/ros/install/setup.bash
-
     # Get driver
     sudo apt-get update && sudo apt install curl gnupg2 lsb-release
     sudo curl -sSL https://raw.githubusercontent.com/ros/rosdistro/master/ros.key  -o /usr/share/keyrings/ros-archive-keyring.gpg
@@ -35,7 +31,8 @@ else
     
     # Install the driver and pointcloud conversion package
     sudo apt install ros-humble-velodyne-driver -y
-
+    
+    echo "Sourcing base image for a full build..."
     source /opt/ros/humble/setup.bash
     source /opt/autoware.ai/ros/install/setup.bash
 fi

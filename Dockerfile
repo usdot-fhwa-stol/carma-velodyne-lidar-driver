@@ -44,4 +44,4 @@ COPY --from=setup /home/carma/install /opt/carma/install
 # Copy dependencies installed
 COPY --from=setup /opt/ros/humble /opt/ros/humble
 
-CMD [ "wait-for-it", "localhost:11311", "--", "ros2","launch", "velodyne_lidar_driver_wrapper", "velodyne_lidar_driver_wrapper_launch.py"]
+CMD [ "ros2","launch", "velodyne_lidar_driver_wrapper", "velodyne_lidar_driver_wrapper_launch.py"]

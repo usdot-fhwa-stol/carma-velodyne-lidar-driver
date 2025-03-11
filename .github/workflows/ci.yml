@@ -3,7 +3,7 @@ on:
   pull_request:
     types: [opened, synchronize, reopened]
   push:
-    branches: 
+    branches:
       - develop
       - master
       - "release/*"
@@ -16,23 +16,25 @@ jobs:
     steps:
       - id: docker-org-and-tag
         uses: usdot-fhwa-stol/actions/docker-org-and-tag@main
+        with:
+          docker_tag_suffix: humble
   build:
     needs: determine_docker_org_and_tag
     defaults:
       run:
         shell: bash
-        working-directory: "/opt/carma/"
+        working-directory: "/opt/carma"
     runs-on: ubuntu-latest
     container:
       image: ${{ needs.determine_docker_org_and_tag.outputs.docker_organization }}/autoware.ai:${{ needs.determine_docker_org_and_tag.outputs.docker_image_tag }}
       env:
         INIT_ENV: "/home/carma/.base-image/init-env.sh"
-        ROS_2_ENV: "/opt/ros/foxy/setup.bash"
+        ROS_2_ENV: "/opt/ros/humble/setup.bash"
         TERM: xterm
       options: "--user root"
     steps:
     - name: Checkout ${{ github.event.repository.name }}
-      uses: actions/checkout@v3.3.0
+      uses: actions/checkout@v4.2.2
       with:
         path: src/${{ github.event.repository.name }}
         fetch-depth: 0
@@ -48,7 +50,7 @@ jobs:
         fi
     - name: Checkout dependencies
       run: |
-        ./src/${{ github.event.repository.name }}/docker/checkout.bash -r /opt/carma/ -b ${{ steps.determine-base-branch.outputs.git_branch }} 
+        ./src/${{ github.event.repository.name }}/docker/checkout.bash -r /opt/carma/ -b ${{ steps.determine-base-branch.outputs.git_branch }}
     - name: Build
       run: |
         source "$INIT_ENV"

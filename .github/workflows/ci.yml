@@ -3,10 +3,9 @@ on:
   pull_request:
     types: [opened, synchronize, reopened]
   push:
-    branches: 
+    branches:
       - develop
       - master
-      - develop-humble
       - "release/*"
 jobs:
   determine_docker_org_and_tag:
@@ -17,6 +16,8 @@ jobs:
     steps:
       - id: docker-org-and-tag
         uses: usdot-fhwa-stol/actions/docker-org-and-tag@main
+        with:
+          docker_tag_suffix: humble
   build:
     needs: determine_docker_org_and_tag
     defaults:
@@ -49,7 +50,7 @@ jobs:
         fi
     - name: Checkout dependencies
       run: |
-        ./src/${{ github.event.repository.name }}/docker/checkout.bash -r /opt/carma/ -b ${{ steps.determine-base-branch.outputs.git_branch }} 
+        ./src/${{ github.event.repository.name }}/docker/checkout.bash -r /opt/carma/ -b ${{ steps.determine-base-branch.outputs.git_branch }}
     - name: Build
       run: |
         source "$INIT_ENV"

@@ -11,11 +11,11 @@
 #  WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
 #  License for the specific language governing permissions and limitations under
 #  the License.
-ARG DOCKER_ORG="usdotfhwastolcandidate"
-ARG DOCKER_TAG="test_run"
+ARG DOCKER_ORG="usdotfhwastoldev"
+ARG DOCKER_TAG="sync_test_run"
 FROM ${DOCKER_ORG}/autoware.ai:${DOCKER_TAG} as base_image
 FROM base_image as setup
-ARG GIT_BRANCH="release/test_run"
+ARG GIT_BRANCH="sync_test_run"
 ARG PACKAGES=""
 ENV PACKAGES=${PACKAGES}
 

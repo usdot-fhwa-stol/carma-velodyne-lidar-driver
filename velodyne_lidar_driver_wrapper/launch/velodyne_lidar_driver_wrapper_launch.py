@@ -26,6 +26,7 @@ from launch.launch_description_sources import PythonLaunchDescriptionSource
 from launch_ros.actions import set_remap
 from launch_ros.actions import set_parameter
 
+import yaml
 import os
 
 def generate_launch_description():
@@ -35,7 +36,7 @@ def generate_launch_description():
     declare_log_level_arg = DeclareLaunchArgument(
         name ='log_level', default_value = 'DEBUG', description="Log level to print.", choices=["DEBUG","INFO","WARN","ERROR","FATAL"])
 
-    # Args for driver
+    # Args for velodyne_driver_node
     frame_id = LaunchConfiguration('frame_id')
     declare_frame_id = DeclareLaunchArgument(name = 'frame_id', default_value = "velodyne", description="The frame id to use for the scan data")
 
@@ -57,20 +58,21 @@ def generate_launch_description():
     gps_time = LaunchConfiguration('gps_time')
     declare_gps_time = DeclareLaunchArgument(name = 'gps_time', default_value = 'False')
 
-    # Args for Pointcloud
-    velodyne_pointcloud_pkg = get_package_share_directory('velodyne_pointcloud')
-
-    organize_cloud = LaunchConfiguration('organize_cloud')
-    declare_organize_cloud = DeclareLaunchArgument(name ='organize_cloud', default_value = 'False')
+    # Args for velodyne_transform_node
+    pointcloud_params_file = os.path.join(
+        get_package_share_directory('velodyne_lidar_driver_wrapper'), 'config/VLP32C-velodyne_transform_node-params.yaml')
+    with open(pointcloud_params_file, 'r') as f:
+        pointcloud_params = yaml.safe_load(f)['velodyne_transform_node']['ros__parameters']
+    pointcloud_params['calibration'] = os.path.join(get_package_share_directory('velodyne_pointcloud'), 'params', 'VeloView-VLP-32C.yaml')
 
     # Define Velodyne ROS2 driver node along with pointcloud converter
     velodyne_pointcloud_group = GroupAction(
         actions = [
             set_remap.SetRemap('velodyne_points','lidar/points_raw'),
-            IncludeLaunchDescription(
-                PythonLaunchDescriptionSource(['/', velodyne_pointcloud_pkg, '/launch', '/velodyne_convert_node-VLP32C-launch.py']),
-                launch_arguments={'organize_cloud':organize_cloud}.items()
-            ),
+            Node(package='velodyne_pointcloud',
+                executable='velodyne_transform_node',
+                output='both',
+                parameters=[pointcloud_params])
         ]
     )
 
@@ -78,7 +80,7 @@ def generate_launch_description():
     param_file_path = os.path.join(
         get_package_share_directory('velodyne_lidar_driver_wrapper'), 'config/parameters.yaml')
 
-    
+
     velodyne_driver_container = ComposableNodeContainer(
         name='velodyne_driver_container',
         namespace=GetCurrentNamespace(),
@@ -109,7 +111,7 @@ def generate_launch_description():
         namespace=GetCurrentNamespace(),
         executable='carma_component_container_mt',
         composable_node_descriptions=[
-            
+
             # Launch the core node(s)
             ComposableNode(
                 package='velodyne_lidar_driver_wrapper',
@@ -135,8 +137,6 @@ def generate_launch_description():
         declare_model,
         declare_cut_angle,
         declare_gps_time,
-        # Pointcloud args
-        declare_organize_cloud,
         # Specify Nodes
         velodyne_pointcloud_group,
         velodyne_driver_container,

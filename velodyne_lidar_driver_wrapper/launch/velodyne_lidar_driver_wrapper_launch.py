@@ -127,6 +127,37 @@ def generate_launch_description():
         ]
     )
 
+    ros2_cmd = launch.substitutions.FindExecutable(name='ros2')
+
+    process_configure = launch.actions.ExecuteProcess(
+        cmd=[ros2_cmd, "lifecycle", "set", "/velodyne_driver_node", "configure"],
+    )
+    process_configure = launch.actions.ExecuteProcess(
+        cmd=[ros2_cmd, "lifecycle", "set", "/velodyne_lidar_driver_wrapper_node", "configure"],
+    )
+
+    configuration_trigger = launch.actions.TimerAction(
+        period=configuration_delay,
+        actions=[
+            process_configure,
+        ]
+    )
+
+    configured_event_handler = launch.actions.RegisterEventHandler(launch.event_handlers.OnExecutionComplete(
+        target_action=process_configure, on_completion=[
+            launch.actions.ExecuteProcess(
+                cmd=[ros2_cmd, "lifecycle", "set", "/velodyne_driver_node", "activate"],
+            )
+        ])
+    )
+    configured_event_handler = launch.actions.RegisterEventHandler(launch.event_handlers.OnExecutionComplete(
+        target_action=process_configure, on_completion=[
+            launch.actions.ExecuteProcess(
+                cmd=[ros2_cmd, "lifecycle", "set", "/velodyne_lidar_driver_wrapper_node", "activate"],
+            )
+        ])
+    )
+
     return LaunchDescription([
         # Specify Args
         declare_log_level_arg,

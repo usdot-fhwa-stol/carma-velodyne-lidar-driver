@@ -1,13 +1,13 @@
 #!/bin/bash
 
 #  Copyright (C) 2018-2021 LEIDOS.
-# 
+#
 #  Licensed under the Apache License, Version 2.0 (the "License"); you may not
 #  use this file except in compliance with the License. You may obtain a copy of
 #  the License at
-# 
+#
 #  http://www.apache.org/licenses/LICENSE-2.0
-# 
+#
 #  Unless required by applicable law or agreed to in writing, software
 #  distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
 #  WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
@@ -20,18 +20,16 @@ if [[ ! -z "$PACKAGES" ]]; then
     source /opt/carma/install/setup.bash
 else
     # Get driver
-    sudo apt-get update && sudo apt install curl gnupg2 lsb-release
-    sudo curl -sSL https://raw.githubusercontent.com/ros/rosdistro/master/ros.key  -o /usr/share/keyrings/ros-archive-keyring.gpg
-    echo "deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/ros-archive-keyring.gpg] http://packages.ros.org/ros2/ubuntu $(lsb_release -cs) main" | sudo tee /etc/apt/sources.list.d/ros2.list > /dev/null
+    sudo apt-get update && sudo apt install curl
 
     # Before installing driver and the wrapper, temporary workaround until Eigen3 and PCL are properly exported by velodyne_pointcloud
     # open issue: https://github.com/ros-drivers/velodyne/issues/550, workaround by: @hect95
     sudo sed -i 's/\beigen\b/Eigen3/g' /opt/ros/humble/share/velodyne_pointcloud/cmake/ament_cmake_export_dependencies-extras.cmake
     sudo sed -i 's/\bpcl\b/PCL/g' /opt/ros/humble/share/velodyne_pointcloud/cmake/ament_cmake_export_dependencies-extras.cmake
-    
+
     # Install the driver and pointcloud conversion package
     sudo apt install ros-humble-velodyne-driver -y
-    
+
     echo "Sourcing base image for a full build..."
     source /opt/ros/humble/setup.bash
     source /opt/autoware.ai/ros/install/setup.bash

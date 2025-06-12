@@ -4,7 +4,6 @@
 
 # CARMAVelodyneLidarDriver
 CARMAVelodyneLidarDriver contains a driver wrapper for usage with the standard Velodyne LiDAR driver to integrate with the CARMA Platform
-
 To add this package to your CARMAPlatform project simply clone this repository into your Catkin workspace
 
 # CARMAPlatform

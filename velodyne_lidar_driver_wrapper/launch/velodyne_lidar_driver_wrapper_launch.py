@@ -65,6 +65,15 @@ def generate_launch_description():
         pointcloud_params = yaml.safe_load(f)['velodyne_transform_node']['ros__parameters']
     pointcloud_params['calibration'] = os.path.join(get_package_share_directory('velodyne_pointcloud'), 'params', 'VeloView-VLP-32C.yaml')
 
+    # Declare the global_params_override_file launch argument
+    # Parameters in this file will override any parameters loaded in their respective packages
+    global_params_override_file = LaunchConfiguration('global_params_override_file')
+    declare_global_params_override_file_arg = DeclareLaunchArgument(
+        name = 'global_params_override_file',
+        default_value = ["/opt/carma/vehicle/GlobalParamsOverride.yaml"],
+        description = "Path to global file containing the parameters overwrite"
+    )
+
     # Define Velodyne ROS2 driver node along with pointcloud converter
     velodyne_pointcloud_group = GroupAction(
         actions = [
@@ -73,6 +82,7 @@ def generate_launch_description():
                 executable='velodyne_transform_node',
                 output='both',
                 parameters=[pointcloud_params])
+                # Any params can be edited by the existing file without global_params_override_file
         ]
     )
 
@@ -98,7 +108,8 @@ def generate_launch_description():
                     {'port':  port},
                     {'model' : model},
                     {'cut_angle' : cut_angle},
-                    {'gps_time' : gps_time}
+                    {'gps_time' : gps_time},
+                    global_params_override_file
                 ]
             )
         ]
@@ -122,7 +133,7 @@ def generate_launch_description():
                     {'use_intra_process_comms': True},
                     {'--log-level' : log_level }
                 ],
-                parameters=[ param_file_path ]
+                parameters=[ param_file_path, global_params_override_file ]
             ),
         ]
     )
@@ -137,6 +148,7 @@ def generate_launch_description():
         declare_model,
         declare_cut_angle,
         declare_gps_time,
+        declare_global_params_override_file_arg,
         # Specify Nodes
         velodyne_pointcloud_group,
         velodyne_driver_container,

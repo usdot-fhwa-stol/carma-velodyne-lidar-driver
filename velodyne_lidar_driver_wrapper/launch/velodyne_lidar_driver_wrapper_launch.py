@@ -81,8 +81,9 @@ def generate_launch_description():
             Node(package='velodyne_pointcloud',
                 executable='velodyne_transform_node',
                 output='both',
-                parameters=[pointcloud_params])
-                # Any params can be edited by the existing file without global_params_override_file
+                parameters=[pointcloud_params,
+                            global_params_override_file
+                ])
         ]
     )
 
